@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ruleset name="TiMMiT">
+	<description>Shared PHPCS rules for aItem applications.</description>
+
+	<rule ref="./Sniffs/Classes/ValidClassNameSniff.php"/>
+</ruleset>
