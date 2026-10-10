@@ -40,6 +40,7 @@ The installer registers the `TiMMiT` standard. Check with `vendor/bin/phpcs -i`.
 | --- | --- |
 | Abstract class | lowercase `a`, then PascalCase: `aItem`, `aConnector` |
 | Trait | lowercase `t`, then PascalCase: `tItem` |
-| Class, interface, enum | PascalCase: `Sim` |
+| Interface | lowercase `i`, then PascalCase: `iProvider`, `iCorrespondence` |
+| Class, enum | PascalCase: `Sim` |
 
-`aitem` and `titem` are still reported: the part after the prefix must be PascalCase.
+`aitem`, `titem` and `iprovider` are still reported: the part after the prefix must be PascalCase.

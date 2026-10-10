@@ -2,7 +2,8 @@
 
 /**
  * Class names are PascalCase.
- * An abstract class starts with a lowercase a. A trait starts with a lowercase t.
+ * An abstract class starts with a lowercase a, a trait with a lowercase t,
+ * and an interface with a lowercase i.
  */
 
 namespace PHP_CodeSniffer\Standards\TiMMiT\Sniffs\Classes;
@@ -48,11 +49,12 @@ class ValidClassNameSniff implements Sniff
 
         $isAbstract = $this->isAbstractClass($phpcsFile, $stackPtr);
         $isTrait = $tokens[$stackPtr]['code'] === T_TRAIT;
-        if ($this->isValidName($name, $isAbstract, $isTrait)) {
+        $isInterface = $tokens[$stackPtr]['code'] === T_INTERFACE;
+        if ($this->isValidName($name, $isAbstract, $isTrait, $isInterface)) {
             return;
         }
 
-        $this->addNameError($phpcsFile, $stackPtr, $name, $isAbstract, $isTrait);
+        $this->addNameError($phpcsFile, $stackPtr, $name, $isAbstract, $isTrait, $isInterface);
     }
 
     /**
@@ -129,10 +131,11 @@ class ValidClassNameSniff implements Sniff
      * @param string $name
      * @param bool   $isAbstract
      * @param bool   $isTrait
+     * @param bool   $isInterface
      *
      * @return bool
      */
-    private function isValidName(string $name, bool $isAbstract, bool $isTrait): bool
+    private function isValidName(string $name, bool $isAbstract, bool $isTrait, bool $isInterface): bool
     {
         if ($isAbstract) {
             return $this->hasPascalCaseSuffix($name, 'a');
@@ -140,6 +143,10 @@ class ValidClassNameSniff implements Sniff
 
         if ($isTrait) {
             return $this->hasPascalCaseSuffix($name, 't');
+        }
+
+        if ($isInterface) {
+            return $this->hasPascalCaseSuffix($name, 'i');
         }
 
         return Common::isCamelCaps($name, true, true, false);
@@ -166,10 +173,11 @@ class ValidClassNameSniff implements Sniff
      * @param string                      $name
      * @param bool                        $isAbstract
      * @param bool                        $isTrait
+     * @param bool                        $isInterface
      *
      * @return void
      */
-    private function addNameError(File $phpcsFile, int $stackPtr, string $name, bool $isAbstract, bool $isTrait): void
+    private function addNameError(File $phpcsFile, int $stackPtr, string $name, bool $isAbstract, bool $isTrait, bool $isInterface): void
     {
         $tokens = $phpcsFile->getTokens();
         $opener = $tokens[$stackPtr]['scope_opener'];
@@ -193,6 +201,16 @@ class ValidClassNameSniff implements Sniff
                 'Trait name "%s" must start with a lowercase "t" followed by PascalCase',
                 $nameStart,
                 'TraitPrefix',
+                [$name]
+            );
+            return;
+        }
+
+        if ($isInterface) {
+            $phpcsFile->addError(
+                'Interface name "%s" must start with a lowercase "i" followed by PascalCase',
+                $nameStart,
+                'InterfacePrefix',
                 [$name]
             );
             return;

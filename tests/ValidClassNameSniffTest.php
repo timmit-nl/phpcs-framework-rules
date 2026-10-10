@@ -42,8 +42,9 @@ class ValidClassNameSniffTest extends TestCase
             'abstract aConnector' => ["<?php\nnamespace Example;\nabstract class aConnector {}\n"],
             'abstract readonly aItem' => ["<?php\nnamespace Example;\nabstract readonly class aItem {}\n"],
             'trait tItem' => ["<?php\nnamespace Example;\ntrait tItem {}\n"],
+            'interface iProvider' => ["<?php\nnamespace Example;\ninterface iProvider {}\n"],
+            'interface iCorrespondence' => ["<?php\nnamespace Example;\ninterface iCorrespondence {}\n"],
             'class Sim' => ["<?php\nnamespace Example;\nclass Sim {}\n"],
-            'interface Connector' => ["<?php\nnamespace Example;\ninterface Connector {}\n"],
             'enum Status' => ["<?php\nnamespace Example;\nenum Status {}\n"],
             'anonymous class' => ["<?php\nnamespace Example;\n\$object = new class {};\n"],
         ];
@@ -71,16 +72,25 @@ class ValidClassNameSniffTest extends TestCase
                 "<?php\nnamespace Example;\ntrait titem {}\n",
                 ['TiMMiT.Classes.ValidClassName.TraitPrefix'],
             ],
+            'interface without prefix' => [
+                "<?php\nnamespace Example;\ninterface Connector {}\n",
+                ['TiMMiT.Classes.ValidClassName.InterfacePrefix'],
+            ],
+            'interface lowercase rest' => [
+                "<?php\nnamespace Example;\ninterface iprovider {}\n",
+                ['TiMMiT.Classes.ValidClassName.InterfacePrefix'],
+            ],
             'concrete lowercase' => [
                 "<?php\nnamespace Example;\nclass sim {}\n",
                 ['TiMMiT.Classes.ValidClassName.NotPascalCase'],
             ],
             'mixed file' => [
-                "<?php\nnamespace Example;\nabstract class Item {}\nclass sim {}\ntrait ItemTrait {}\n",
+                "<?php\nnamespace Example;\nabstract class Item {}\nclass sim {}\ntrait ItemTrait {}\ninterface Connector {}\n",
                 [
                     'TiMMiT.Classes.ValidClassName.AbstractPrefix',
                     'TiMMiT.Classes.ValidClassName.NotPascalCase',
                     'TiMMiT.Classes.ValidClassName.TraitPrefix',
+                    'TiMMiT.Classes.ValidClassName.InterfacePrefix',
                 ],
             ],
         ];
